@@ -76,7 +76,7 @@ def dms_to_decimal(text,direction):
     result = dms2dd(degrees, minutes, seconds, direction)
     return result
 
-def image_true_color(index, img_data_id, images_path ) :
+def image_true_color(index, img_data_id, images_path ,x1=0,y1=0,DifRes=False) :
     # path to jp2 files
     path = images_path + 'index' + index + '/' + img_data_id
     
@@ -87,6 +87,8 @@ def image_true_color(index, img_data_id, images_path ) :
     path = path + '/' + safe + '/GRANULE/'
     semifolder = os.listdir(path)[0]
     path = path + '/' + semifolder + '/IMG_DATA/'
+    if DifRes :
+        path = path + 'R10m/'
     regexp = re.compile(r'_B0[2348]')
     sentinal_band_paths = [os.path.join(path, f) for f in os.listdir(path) if regexp.search(f) ]
     sentinal_band_paths.sort()
@@ -123,9 +125,11 @@ def image_true_color(index, img_data_id, images_path ) :
     outProj = Proj(init= full_dataset.crs  )
 
     #fire location
-    index_data = fire_data(index)
-    y1 =dms_to_decimal(index_data["lat"],"W")
-    x1 =dms_to_decimal(index_data["lon"],"N")
+    if (x1==0 and y1==0) :
+        index_data = fire_data(index)
+        y1 =dms_to_decimal(index_data["lat"],"W")
+        x1 =dms_to_decimal(index_data["lon"],"N")
+        print(x1,y1)
 
     x2,y2 = transform(inProj,outProj,x1,y1)
     a = full_dataset.transform
@@ -136,10 +140,10 @@ def image_true_color(index, img_data_id, images_path ) :
 
     # 0 to  10980 for this img_data
 
-    xmin = int( col - 200 ) 
-    xmax = int( col + 200 ) 
-    ymin = int( row - 200 ) 
-    ymax = int( row + 200 ) 
+    xmin = int( col - 400 ) 
+    xmax = int( col + 400 ) 
+    ymin = int( row - 400 ) 
+    ymax = int( row + 400 ) 
 
     if (xmin < 0) :
         xmin = 0
@@ -164,7 +168,7 @@ def image_true_color(index, img_data_id, images_path ) :
 
     reshaped_img_train = reshape_as_image(img_train)
 
-    fig, axs = plt.subplots(1,figsize=(14,14))
+    fig, axs = plt.subplots(1,figsize=(20,20))
     img_stretched_train = color_stretch(reshaped_img_train, [2, 1, 0])
     axs.imshow(img_stretched_train)
     plt.show()
