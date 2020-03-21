@@ -87,6 +87,7 @@ def image_true_color(index, img_data_id, images_path ,x1=0,y1=0,DifRes=False) :
     path = path + '/' + safe + '/GRANULE/'
     semifolder = os.listdir(path)[0]
     path = path + '/' + semifolder + '/IMG_DATA/'
+
     if DifRes :
         path = path + 'R10m/'
     regexp = re.compile(r'_B0[2348]')
@@ -140,10 +141,10 @@ def image_true_color(index, img_data_id, images_path ,x1=0,y1=0,DifRes=False) :
 
     # 0 to  10980 for this img_data
 
-    xmin = int( col - 400 ) 
-    xmax = int( col + 400 ) 
-    ymin = int( row - 400 ) 
-    ymax = int( row + 400 ) 
+    xmin = int( col - 100 ) 
+    xmax = int( col + 100 ) 
+    ymin = int( row - 100 ) 
+    ymax = int( row + 100 ) 
 
     if (xmin < 0) :
         xmin = 0
