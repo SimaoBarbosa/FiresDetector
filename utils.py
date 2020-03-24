@@ -1,14 +1,8 @@
 import datetime
 import dateutil.parser
-
-def find_images(coords,sensing_date_FROM,sensing_date_TO,filename, sentinel=2) :
-    global USERNAME
-    global PASSWORD
-    command = "dhusget.sh -u "+USERNAME+" -p "+PASSWORD +" -S "+sensing_date_FROM+" -E "+sensing_date_TO +" -c "+coords
-    if sentinel !=0 :
-        command = command + " -m Sentinel-"+ str(sentinel)
-    command = command + " -q " + filename +  ".xml -C " + filename + ".csv"
-    os.system(command)
+import time
+import re
+import os
 
 def date_to_iso_format (date,time,before=True):
     date = str(date)
@@ -49,3 +43,21 @@ def dms_to_decimal(text,direction):
         seconds = splited[2].replace('\'', "")
     result = dms2dd(degrees, minutes, seconds, direction)
     return result
+
+def wait_for_downloads(sleep_time,num_imgs):
+	downloadpath = "C:/Users/SimãoPauloLealBarbos/Downloads/"
+	regexp = re.compile(r'.*tar.gz')
+	downloaded = 0
+	downloads = []
+	while ( True ) : 
+	    possible_downloads = os.listdir(downloadpath) 
+	    downloaded = 0
+	    downloads = []
+	    for download in possible_downloads :
+	        if regexp.search(download) :
+	            downloaded+=1
+	            downloads.append(download)
+	    if downloaded < num_imgs :
+	    	time.sleep(sleep_time)
+	    else :
+	    	return downloads
