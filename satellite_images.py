@@ -163,6 +163,12 @@ def image_true_color_landsat(index, img_data_id, images_path ,x1=0,y1=0,radius=1
     #show(img_train[[2,1,0], :, :])
     reshaped_img_train = reshape_as_image(img_train)
     fig, axs = plt.subplots(1,figsize=(18,18))
+    if (x1==0 and y1==0):
+    	title = "(RGB)Full img of Fire " + str(index) + " " + img_data_id
+    	axs.set_title(title)
+    else :
+    	title = "(RGB)Zoomed img with radius " +  str(radius) +  " on Fire " + str(index) + " " + img_data_id
+    	axs.set_title(title)
     img_stretched_train = color_stretch(reshaped_img_train, [2,1,0])
     axs.imshow(img_stretched_train)
     plt.show()
